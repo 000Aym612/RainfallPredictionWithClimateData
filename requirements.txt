@@ -1,0 +1,17 @@
+numpy
+pandas
+xarray
+netcdf4
+rasterio
+scipy
+matplotlib
+scikit-learn
+jupyterlab
+gdal
+pyproj
+seaborn
+h5py
+cartopy
+rioxarray
+geopandas
+torch  # PyTorch
