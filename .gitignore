@@ -1,2 +1,3 @@
 venv/
 data/climate_variables/
+.DS_Store
