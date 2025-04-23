@@ -2,3 +2,16 @@ venv/
 data/climate_variables/
 .DS_Store
 *.pyc
+land_model_ensemble_raw/ensemble_results.pkl
+raw_data/climate_variables/air.2m.mon.mean.nc
+raw_data/climate_variables/air.mon.mean.nc
+raw_data/climate_variables/hgt.mon.mean.nc
+raw_data/climate_variables/omega.mon.mean.nc
+raw_data/climate_variables/pottmp.mon.mean.nc
+raw_data/climate_variables/pr_wtr.eatm.mon.mean.nc
+raw_data/climate_variables/shum.mon.mean.nc
+raw_data/climate_variables/skt.mon.mean.nc
+raw_data/climate_variables/skt.sfc.mon.mean.nc
+raw_data/climate_variables/slp.mon.mean.nc
+raw_data/climate_variables/uwnd.mon.mean.nc
+raw_data/climate_variables/vwnd.mon.mean.nc

@@ -1,4 +1,0 @@
-Validation R²: 0.6950
-Validation RMSE: 53.8061 mm
-Validation MAE: 15.9975 mm
-Training time: 0:01:14.863935

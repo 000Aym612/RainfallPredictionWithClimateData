@@ -266,8 +266,9 @@ class DataGenerator:
         with h5py.File(output_path, 'w') as h5_file:
             # Add metadata
             metadata = h5_file.create_group('metadata')
-            metadata.attrs['creation_date'] = np.string_(datetime.now().isoformat())
-            metadata.attrs['num_samples'] = len(data_list)
+            metadata.attrs['creation_date'] = np.bytes_(datetime.now().isoformat())
+            metadata.attrs['num_dates'] = len(data_list)
+            metadata.attrs['num_grid_points'] = len(self.grid_points)
             metadata.attrs['grid_size'] = int(np.sqrt(len(self.grid_points)))
             metadata.attrs['local_patch_size'] = self.local_patches[0].shape[0]
             metadata.attrs['regional_patch_size'] = self.regional_patches[0].shape[0]
