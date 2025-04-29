@@ -300,19 +300,19 @@ def train_ensemble_with_cv(data, hyperparams, output_dir, n_folds=5, n_models=5,
         print(f"Validation RMSE: {val_rmse:.4f} (scaled)")
         print(f"Validation MAE: {val_mae:.4f} (scaled)")
         
-        # Convert back to mm
-        val_rmse_mm = val_rmse * 100
-        val_mae_mm = val_mae * 100
+        # Convert back to in
+        val_rmse_in = val_rmse * 100
+        val_mae_in = val_mae * 100
         
-        print(f"Validation RMSE: {val_rmse_mm:.4f} mm")
-        print(f"Validation MAE: {val_mae_mm:.4f} mm")
+        print(f"Validation RMSE: {val_rmse_in:.4f} in")
+        print(f"Validation MAE: {val_mae_in:.4f} in")
         
         # Save fold results
         fold_result = {
             'fold': fold + 1,
             'r2': val_r2,
-            'rmse': val_rmse_mm,
-            'mae': val_mae_mm,
+            'rmse': val_rmse_in,
+            'mae': val_mae_in,
             'models': fold_models
         }
         fold_results.append(fold_result)
@@ -326,7 +326,7 @@ def train_ensemble_with_cv(data, hyperparams, output_dir, n_folds=5, n_models=5,
         plt.plot([0, max(y_val)], [0, max(y_val)], 'r--')
         plt.xlabel('Actual Rainfall (scaled)')
         plt.ylabel('Predicted Rainfall (scaled)')
-        plt.title(f'Fold {fold+1}: Actual vs Predicted Rainfall\nR² = {val_r2:.4f}, RMSE = {val_rmse_mm:.2f} mm')
+        plt.title(f'Fold {fold+1}: Actual vs Predicted Rainfall\nR² = {val_r2:.4f}, RMSE = {val_rmse_in:.2f} in')
         plt.grid(True)
         plt.savefig(os.path.join(fold_dir, 'actual_vs_predicted.png'))
         plt.close()
@@ -342,8 +342,8 @@ def train_ensemble_with_cv(data, hyperparams, output_dir, n_folds=5, n_models=5,
     
     print("\nAverage Cross-Validation Results:")
     print(f"R²: {avg_r2:.4f}")
-    print(f"RMSE: {avg_rmse:.4f} mm")
-    print(f"MAE: {avg_mae:.4f} mm")
+    print(f"RMSE: {avg_rmse:.4f} in")
+    print(f"MAE: {avg_mae:.4f} in")
     
     # Evaluate on test set
     test_ds = tf.data.Dataset.from_tensor_slices(({
@@ -368,14 +368,18 @@ def train_ensemble_with_cv(data, hyperparams, output_dir, n_folds=5, n_models=5,
     test_rmse = np.sqrt(mean_squared_error(data['targets']['test'], ensemble_test_pred))
     test_mae = mean_absolute_error(data['targets']['test'], ensemble_test_pred)
     
-    # Convert back to mm
-    test_rmse_mm = test_rmse * 100
-    test_mae_mm = test_mae * 100
+    # Convert back to in
+    test_rmse_in = test_rmse * 100
+    test_mae_in = test_mae * 100
     
     print("\nTest Set Results (Full Ensemble):")
     print(f"R²: {test_r2:.4f}")
-    print(f"RMSE: {test_rmse_mm:.4f} mm")
-    print(f"MAE: {test_mae_mm:.4f} mm")
+    print(f"RMSE: {test_rmse_in:.4f} in")
+    print(f"MAE: {test_mae_in:.4f} in")
+    
+    # Save test predictions and actual values for later visualization
+    np.save(os.path.join(output_dir, 'test_predictions.npy'), ensemble_test_pred)
+    np.save(os.path.join(output_dir, 'test_actual.npy'), data['targets']['test'])
     
     # Plot actual vs predicted for test set
     plt.figure(figsize=(10, 8))
@@ -383,7 +387,7 @@ def train_ensemble_with_cv(data, hyperparams, output_dir, n_folds=5, n_models=5,
     plt.plot([0, max(data['targets']['test'])], [0, max(data['targets']['test'])], 'r--')
     plt.xlabel('Actual Rainfall (scaled)')
     plt.ylabel('Predicted Rainfall (scaled)')
-    plt.title(f'Test Set: Actual vs Predicted Rainfall\nR² = {test_r2:.4f}, RMSE = {test_rmse_mm:.2f} mm')
+    plt.title(f'Test Set: Actual vs Predicted Rainfall\nR² = {test_r2:.4f}, RMSE = {test_rmse_in:.2f} in')
     plt.grid(True)
     plt.savefig(os.path.join(output_dir, 'test_actual_vs_predicted.png'))
     plt.close()
@@ -395,8 +399,8 @@ def train_ensemble_with_cv(data, hyperparams, output_dir, n_folds=5, n_models=5,
         'avg_cv_rmse': avg_rmse,
         'avg_cv_mae': avg_mae,
         'test_r2': test_r2,
-        'test_rmse': test_rmse_mm,
-        'test_mae': test_mae_mm,
+        'test_rmse': test_rmse_in,
+        'test_mae': test_mae_in,
         'hyperparams': hyperparams,
         'n_folds': n_folds,
         'n_models': n_models,
@@ -416,9 +420,9 @@ def train_ensemble_with_cv(data, hyperparams, output_dir, n_folds=5, n_models=5,
             f.write(f"  {key}: {value}\n")
         f.write("\nCross-Validation Results:\n")
         for i, fold in enumerate(fold_results):
-            f.write(f"  Fold {i+1}: R² = {fold['r2']:.4f}, RMSE = {fold['rmse']:.4f} mm, MAE = {fold['mae']:.4f} mm\n")
-        f.write(f"\nAverage CV: R² = {avg_r2:.4f}, RMSE = {avg_rmse:.4f} mm, MAE = {avg_mae:.4f} mm\n")
-        f.write(f"\nTest Set: R² = {test_r2:.4f}, RMSE = {test_rmse_mm:.4f} mm, MAE = {test_mae_mm:.4f} mm\n")
+            f.write(f"  Fold {i+1}: R² = {fold['r2']:.4f}, RMSE = {fold['rmse']:.4f} in, MAE = {fold['mae']:.4f} in\n")
+        f.write(f"\nAverage CV: R² = {avg_r2:.4f}, RMSE = {avg_rmse:.4f} in, MAE = {avg_mae:.4f} in\n")
+        f.write(f"\nTest Set: R² = {test_r2:.4f}, RMSE = {test_rmse_in:.4f} in, MAE = {test_mae_in:.4f} in\n")
         f.write(f"\nTraining completed in {time.strftime('%H:%M:%S', time.gmtime(training_time))}\n")
     
     return results
@@ -514,11 +518,11 @@ def main():
     # Print final results
     print("\nFinal Results:")
     print(f"Average CV R²: {results['avg_cv_r2']:.4f}")
-    print(f"Average CV RMSE: {results['avg_cv_rmse']:.4f} mm")
-    print(f"Average CV MAE: {results['avg_cv_mae']:.4f} mm")
+    print(f"Average CV RMSE: {results['avg_cv_rmse']:.4f} in")
+    print(f"Average CV MAE: {results['avg_cv_mae']:.4f} in")
     print(f"Test R²: {results['test_r2']:.4f}")
-    print(f"Test RMSE: {results['test_rmse']:.4f} mm")
-    print(f"Test MAE: {results['test_mae']:.4f} mm")
+    print(f"Test RMSE: {results['test_rmse']:.4f} in")
+    print(f"Test MAE: {results['test_mae']:.4f} in")
     
     print(f"\nResults saved to {args.output_dir}")
     
