@@ -206,13 +206,10 @@ The ensemble version enhances this architecture with:
 
 The model performance improved significantly through several development phases:
 
-| Model | Test R² | Test RMSE (mm) | Test MAE (mm) |
+| Model | Test R² | Test RMSE (in) | Test MAE (in) |
 |-------|---------|----------------|---------------|
-| Initial Model | Negative | >100 | >20 |
-| Basic Tuned Model | 0.3266 | 82.35 | 19.76 |
-| Hyperparameter Tuned | 0.4510 | 74.42 | 17.99 |
-| Previous Best Model | 0.5591 | 67.06 | 17.04 |
-| Ensemble with CV | **0.6313** | **60.99** | **15.99** |
+| Single Hyperparameter Tuned | 0.2472 | 0.8715 | 0.1669 |
+| Ensemble with CV | **0.7955** | **0.4522** | **.1325** |
 
 The ensemble model with cross-validation achieved the best performance across all metrics, with a 12.9% improvement in R² over the previous best model and a 40.0% improvement over the initial tuned model.
 
@@ -222,9 +219,9 @@ The ensemble model showed consistent performance across different data splits:
 
 | Metric | Average CV Value | Test Value |
 |--------|-----------------|------------|
-| R² | 0.5165 | 0.6313 |
-| RMSE (mm) | 70.97 | 60.99 |
-| MAE (mm) | 16.18 | 15.99 |
+| R² | 0.6253 | 0.7955 |
+| RMSE (in) | 0.6334 | 0.4522 |
+| MAE (in) | 0.1443 | 0.1325 |
 
 ## Data Requirements
 
@@ -312,6 +309,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Acknowledgments
 
-- The LAND methodology which inspired this approach
-- Keras and TensorFlow teams for their excellent deep learning frameworks
-- All contributors to the open-source packages used in this project
+- The LAND methodology which inspired this approach: Hatanaka, Y., Indika, A., Giambelluca, T., & Sadowski, P. (2024). Statistical Downscaling of Climate Models with Deep Learning. March 2024.
