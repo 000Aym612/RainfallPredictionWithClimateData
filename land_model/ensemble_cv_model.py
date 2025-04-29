@@ -368,7 +368,7 @@ def train_ensemble_with_cv(data, hyperparams, output_dir, n_folds=5, n_models=5,
     test_rmse = np.sqrt(mean_squared_error(data['targets']['test'], ensemble_test_pred))
     test_mae = mean_absolute_error(data['targets']['test'], ensemble_test_pred)
     
-    # Convert back to in
+    # Convert back to inches (the original data was scaled by 1/100 for model training)
     test_rmse_in = test_rmse * 100
     test_mae_in = test_mae * 100
     
@@ -399,8 +399,10 @@ def train_ensemble_with_cv(data, hyperparams, output_dir, n_folds=5, n_models=5,
         'avg_cv_rmse': avg_rmse,
         'avg_cv_mae': avg_mae,
         'test_r2': test_r2,
-        'test_rmse': test_rmse_in,
-        'test_mae': test_mae_in,
+        'test_rmse': test_rmse,  # Store the raw RMSE (not scaled by 100)
+        'test_mae': test_mae,    # Store the raw MAE (not scaled by 100)
+        'test_rmse_in': test_rmse_in,  # Also store the inches version for convenience
+        'test_mae_in': test_mae_in,    # Also store the inches version for convenience
         'hyperparams': hyperparams,
         'n_folds': n_folds,
         'n_models': n_models,
@@ -521,8 +523,8 @@ def main():
     print(f"Average CV RMSE: {results['avg_cv_rmse']:.4f} in")
     print(f"Average CV MAE: {results['avg_cv_mae']:.4f} in")
     print(f"Test R²: {results['test_r2']:.4f}")
-    print(f"Test RMSE: {results['test_rmse']:.4f} in")
-    print(f"Test MAE: {results['test_mae']:.4f} in")
+    print(f"Test RMSE: {results['test_rmse_in']:.4f} in")
+    print(f"Test MAE: {results['test_mae_in']:.4f} in")
     
     print(f"\nResults saved to {args.output_dir}")
     
